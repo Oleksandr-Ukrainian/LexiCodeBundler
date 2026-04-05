@@ -1005,6 +1005,17 @@ class BundleApp(tk.Tk):
     def __init__(self):
         super().__init__()
 
+        # --- runtime icon (window + taskbar) ---
+        try:
+            import sys, os as _os
+            _base = sys._MEIPASS if hasattr(sys, "_MEIPASS") else _os.path.dirname(_os.path.abspath(__file__))
+            _ico = _os.path.join(_base, "icon.ico")
+            if _os.path.exists(_ico):
+                self.iconbitmap(_ico)
+        except Exception:
+            pass
+        # --- end icon ---
+
         # базовий шрифт
         try:
             default_font = tkfont.nametofont("TkDefaultFont")
