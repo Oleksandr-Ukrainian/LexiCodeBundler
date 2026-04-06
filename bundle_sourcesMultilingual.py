@@ -1377,6 +1377,7 @@ class BundleApp(tk.Tk):
             fieldbackground=[("readonly", entry_bg)],
             foreground=[("readonly", fg)],
         )
+        self.style.configure("Status.TLabel", foreground=fg, background=bg)
 
     def apply_font_profile(self, profile: str, scale: float):
         try:
@@ -1525,6 +1526,12 @@ class BundleApp(tk.Tk):
         self.canvas.bind("<Configure>", on_canvas_configure)
 
         def _on_mousewheel(event):
+            # Ctrl+Scroll → cycle scaling
+            ctrl_held = (event.state & 0x4) != 0
+            if ctrl_held:
+                self._ctrl_scroll_scaling(event)
+                return "break"
+
             delta = int(-1 * (event.delta / 120))
             self.canvas.yview_scroll(delta, "units")
             try:
@@ -1537,8 +1544,10 @@ class BundleApp(tk.Tk):
                     self.show_easter_egg()
             else:
                 self.scroll_at_bottom_counter = 0
+            return "break"
 
-        self.canvas.bind_all("<MouseWheel>", _on_mousewheel)
+        # bind on root window so scroll works regardless of which widget is hovered
+        self.bind_all("<MouseWheel>", _on_mousewheel, add="+")
 
     def show_easter_egg(self):
         self.easter_shown = True
@@ -1659,6 +1668,19 @@ class BundleApp(tk.Tk):
         self.apply_font_profile(self.font_profile, self.scaling_value)
         self.save_config()
 
+    def _ctrl_scroll_scaling(self, event):
+        """Ctrl+Scroll up/down → step through scaling_labels list."""
+        delta = int(-1 * (event.delta / 120))  # +1 = scroll down = decrease, -1 = increase
+        current = self.scaling_var.get()
+        labels = self.scaling_labels
+        try:
+            idx = labels.index(current)
+        except ValueError:
+            idx = labels.index(self.scaling_to_label(self.scaling_value)) if self.scaling_to_label(self.scaling_value) in labels else len(labels) // 2
+        idx = max(0, min(len(labels) - 1, idx - delta))  # scroll up → bigger scale
+        self.scaling_var.set(labels[idx])
+        # on_scaling_change is triggered via trace
+
     # ---------- UI ----------
 
     def _build_ui(self):
@@ -1722,9 +1744,6 @@ class BundleApp(tk.Tk):
         scaling_combo.pack(side="left", padx=(4, 12))
         self.scaling_var.trace_add("write", self.on_scaling_change)
 
-        # prevent accidental value changes when just scrolling over the top comboboxes
-        for cb in (lang_combo, theme_combo, font_combo, scaling_combo):
-            cb.bind("<MouseWheel>", lambda e: "break")
 
         # RUN button — трохи більший, одразу після scaling
         self.btn_run = ttk.Button(frm_top, text="", command=self.run, style="Run.TButton")
@@ -1831,6 +1850,7 @@ class BundleApp(tk.Tk):
             self.ext_exclude_var,
             DEFAULT_FIELD_VALUES["exclude_ext"],
         )
+
 
         # Exclude dirs / files
         frm_excl = ttk.Frame(self.content)
@@ -1946,7 +1966,7 @@ class BundleApp(tk.Tk):
         # статус бар – ніжно-білий З ЧОРНОЮ ТІННЮ
         self.style.configure(
             "Status.TLabel",
-            foreground="#F5F5F5",           # білий текст
+            #foreground="#F5F5F5",           # білий текст
             #background="#cccccc",         # напівпрозорий темний фон
             font=("TkDefaultFont", 11, "bold"),
             relief="sunken",                # вдавлена рамка
@@ -1974,6 +1994,19 @@ class BundleApp(tk.Tk):
         except Exception:
             self.cat_font = tkfont.Font(family="Courier New", size=10)
         self.cat_label.configure(font=self.cat_font)
+
+        def _combo_scroll_redirect(event):
+            self.canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+            return "break"  # prevent combobox from also scrolling itself
+
+        for cb in (lang_combo, theme_combo, font_combo, scaling_combo,
+                   self.src_combo, self.save_combo, self.shorten_combo,
+                   self.include_combo, self.exclude_combo,
+                   self.exclude_dirs_combo, self.exclude_files_combo,
+                   self.output_name_combo):
+            cb.bind("<MouseWheel>", _combo_scroll_redirect, add="+")
+
+        
 
     def _apply_locale(self):
         self.title(self.t("title"))
