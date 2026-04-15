@@ -11,4 +11,8 @@ R: It supports 67 languages and has absolutely rad customization themes 😎
 
 ADDITIONAL FUNCTIONALITY:
 
-I will add Obsidian MD files support, so you can backup your projects without the bulk of PNG, Gif, MP4 and other files, only MD text!
+Added Unbundle, added MD files support for Obsidian, so you can backup your projects without the bulk of PNG, Gif, MP4 and other files, only MD text!
+
+✅ 3 quality updates done, keep going!
+
+<img width="2048" height="2048" alt="deffa9a4" src="https://github.com/user-attachments/assets/54de4094-fd0b-4007-810b-5080600f2926" />
