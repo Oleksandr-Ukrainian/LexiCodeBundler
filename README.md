@@ -2,6 +2,7 @@
 A bundler that will convert your huge project into 1 txt file to feed it for ai, or multiple txt files at root folders, supports output as simple names as well, stores memory between sessions
 ---
 <img width="2564" height="1380" alt="image" src="https://github.com/user-attachments/assets/65d15b6a-6d74-448c-a8d9-240afe9e6df9" />
+
 ---
 
 Q: Why it is good?
@@ -19,6 +20,7 @@ Added Unbundle, added MD files support for Obsidian, so you can backup your proj
 ✅ 3 quality updates done, keep going!
 ---
 <img width="2048" height="2048" alt="deffa9a4" src="https://github.com/user-attachments/assets/54de4094-fd0b-4007-810b-5080600f2926" />
+
 ---
 
 
