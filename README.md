@@ -11,7 +11,7 @@ R: it can bundle a huge projects excluding .png, and extensions, garbage compila
 
 Q: Is it cool?⭐
 
-R: It supports 67 languages and has absolutely rad customization themes 😎
+R: It supports 6 or 7 languages and has absolutely rad customization themes 😎
 
 ADDITIONAL FUNCTIONALITY:
 
