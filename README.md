@@ -1,4 +1,4 @@
-# LexiCodeBundler/Unbundler & Obsidian Backup (only MD Without Images and Videos)🔥
+# LexiCodeBundler/Unbundler & Backup Obsidian project .MD Without Images and Videos🔥
 A bundler that will convert your huge project into 1 txt file to feed it for ai, or multiple txt files at root folders, supports output as simple names as well, stores memory between sessions
 ---
 <img width="2550" height="1374" alt="image" src="https://github.com/user-attachments/assets/d91ab697-f292-4fe2-8f74-646444dc04db" />
