@@ -1981,7 +1981,7 @@ class BundleApp(tk.Tk):
         for btn in self.profile_dot_buttons:
             btn.destroy()
         self.profile_dot_buttons.clear()
-        for i in range(min(5, len(self._profiles))):
+        for i in range(len(self._profiles)):
             p = self._profiles[i]
             btn = tk.Button(self.profile_dots_frame, text="✦" if i == self._active_profile else "•", bg=p.get("color", self.PROFILE_COLORS[i % 5]), fg=p.get("text_color", "#FFFFFF"), relief="sunken" if i == self._active_profile else "raised", bd=3 if i == self._active_profile else 2, width=2, height=1, command=lambda idx=i: self.switch_profile(idx))
             btn.pack(side="left", padx=2)
@@ -1990,7 +1990,7 @@ class BundleApp(tk.Tk):
 
     def get_profile_label(self) -> str:
         p = self._profiles[self._active_profile]
-        return f"{self.t('profiles_label')} {p.get('name', f'Profile {self._active_profile + 1}') }"
+        return p.get('name', f'Profile {self._active_profile + 1}')
 
     def switch_profile(self, idx: int):
         if idx == self._active_profile:
