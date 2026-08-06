@@ -2032,8 +2032,33 @@ class BundleApp(tk.Tk):
                 ttk.Button(row, text="◀", width=3, command=lambda idx=i: move_profile(idx, -1)).pack(side="left", padx=2)
                 ttk.Button(row, text="▶", width=3, command=lambda idx=i: move_profile(idx, 1)).pack(side="left", padx=2)
                 ttk.Button(row, text="Use", width=5, command=lambda idx=i: use_profile(idx)).pack(side="left", padx=2)
+                del_btn = ttk.Button(row, text="🗑", width=3, command=lambda idx=i: delete_profile(idx))
+                del_btn.pack(side="left", padx=2)
+                if len(self._profiles) <= 1:
+                    del_btn.state(["disabled"])
         def use_profile(idx):
             self.switch_profile(idx)
+            rebuild()
+        def delete_profile(idx):
+            if len(self._profiles) <= 1:
+                return
+            p = self._profiles[idx]
+            confirm = messagebox.askyesno(
+                "Delete Profile",
+                f"Are you sure you want to delete profile '{p.get('name', f'Profile {idx+1}')}'? This cannot be undone.",
+                parent=win,
+            )
+            if not confirm:
+                return
+            del self._profiles[idx]
+            if self._active_profile == idx:
+                self._active_profile = max(0, idx - 1)
+                self.histories = self._profiles[self._active_profile].get("histories", {})
+                self.init_all_histories()
+            elif self._active_profile > idx:
+                self._active_profile -= 1
+            self.refresh_profile_bar()
+            self.save_config()
             rebuild()
         def move_profile(idx, direction):
             new_idx = idx + direction
